@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 const ProfileModel = new mongoose.Schema({
-    Name:{
+    name:{
         type:String
     },
     gmail:{

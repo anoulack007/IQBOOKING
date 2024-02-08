@@ -2,7 +2,8 @@ import express from 'express'
 import connectDB from './src/database/index.js'
 import bodyParser from 'body-parser'
 import { configEnv } from './src/config/envConfig.js';
-import authRouter from './src/routes/AuthContact.js'
+import authRouter from './src/routes/Auth/AuthContact.js'
+import profileRouter from './src/routes/profile.js';
 
 const app = express()
 app.use(bodyParser.json());
@@ -10,6 +11,7 @@ app.use(bodyParser.json());
 connectDB()
 
 app.use(authRouter)
+app.use(profileRouter)
 
 const port = configEnv.PORT
 
