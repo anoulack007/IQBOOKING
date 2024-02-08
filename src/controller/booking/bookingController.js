@@ -1,7 +1,4 @@
 import { bookings } from "../../model/bookings.js";
-import { mongoose } from "mongoose";
-import { room } from "../../model/rooms.js";
-
 
 //View booking list
 const viewBooking = async (req, res) => {
@@ -22,7 +19,7 @@ const viewBookingID = async (req, res) => {
 
         if(!check) {
 
-            res.status(404).json({ message: "Invalid information or not found"})
+            res.status(404).json({ message: "Invalid information or not found"});
         } else {
 
             const info = await bookings.findById(bookingID)
