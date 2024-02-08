@@ -4,13 +4,9 @@ const CreateProfile = async (req, res) => {
   const { name, gmail, gender, phone, country } = req.body;
 
   const findGmail = await profileSchema.findOne({ gmail });
+
   if (findGmail) {
     return res.status(409).send("Profile Email Already Exist.");
-    //   } else {
-    //     const findName = await profileSchema.findOne({ name });
-    //     if (findName) {
-    //       return res.status(409).send("Profile Name Already Exist.");
-    //     }
   }
 
   const DataProfile = await profileSchema.create({
@@ -66,7 +62,7 @@ const DeleteProfile = async (req, res) => {
   const deletePro = await profileSchema.findByIdAndDelete({ _id: id });
 
   if (!deletePro) {
-    res.status(400).send("Delete Profile Fails");
+    res.status(400).send("Delete Profile not found");
   } else {
     res.status(200).send("Delete Profile Success");
   }

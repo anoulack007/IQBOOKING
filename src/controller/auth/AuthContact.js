@@ -41,13 +41,13 @@ const LoginContact = async (req, res) => {
   }
 
   const access_token = jwt.sign(
-    { id: UserContact._id},
+    { id: UserContact._id },
     configEnv.ACCESS_TOKEN_SECRET,
     { expiresIn: "8h" }
   );
 
   const refresh_token = jwt.sign(
-    { id: UserContact._id},
+    { id: UserContact._id },
     configEnv.REFRESH_TOKEN_SECRET,
     { expiresIn: "16h" }
   );
@@ -60,31 +60,31 @@ const LoginContact = async (req, res) => {
 
 const refreshToken = async (req, res, next) => {
 
-    if (!req.headers["authorization"]) return res.sendStatus(401);
+  if (!req.headers["authorization"]) return res.sendStatus(401);
 
-    const token = req.headers["authorization"].split("Bearer ")[1];
- 
-    const decode = jwt.verify(token, configEnv.REFRESH_TOKEN_SECRET);
+  const token = req.headers["authorization"].split("Bearer ")[1];
 
-    const findUser = await customerSchema.findById({ _id: decode.id });
+  const decode = jwt.verify(token, configEnv.REFRESH_TOKEN_SECRET);
 
-    if (!findUser) {
-      return res.send("user not found");
-    }
+  const findUser = await customerSchema.findById({ _id: decode.id });
 
-    const accessToken = jwt.sign(
-      { id: findUser._id},
-      configEnv.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1d" }
-    );
+  if (!findUser) {
+    return res.send("user not found");
+  }
 
-    const refreshToken = jwt.sign(
-      { id: findUser._id},
-      configEnv.REFRESH_TOKEN_SECRET,
-      { expiresIn: "2d" }
-    );
+  const accessToken = jwt.sign(
+    { id: findUser._id },
+    configEnv.ACCESS_TOKEN_SECRET,
+    { expiresIn: "1d" }
+  );
 
-    return res.json({ accessToken, refreshToken });
+  const refreshToken = jwt.sign(
+    { id: findUser._id },
+    configEnv.REFRESH_TOKEN_SECRET,
+    { expiresIn: "2d" }
+  );
+
+  return res.json({ accessToken, refreshToken });
 
 };
 
@@ -108,6 +108,7 @@ const UpdateContact = async (req, res) => {
   const { contact, profileId } = req.body;
 
   const ValidateUpdate = await customerSchema.findOne({ contact });
+
   if (ValidateUpdate) {
     return res.status(400).send("User Contact Already Exist. Please Login");
   }
@@ -133,23 +134,28 @@ const ChangePasswordContact = async (req, res) => {
   const { id } = req.params;
 
   const { passwordOld, passwordNew } = req.body;
+
   if (!passwordOld || !passwordNew) {
     return res.sendStatus(400).send("Fail Change Password Contact");
   }
 
   const UserContact = await customerSchema.findById({ _id: id });
+
   if (!UserContact) return res.sendStatus(401);
 
   const compareContact = await bcrypt.compare(
     passwordOld,
     UserContact.password
   );
+
   if (!compareContact) {
     return res.status(401).send("Fail Change Password Contact");
   }
 
   const password = await bcrypt.hash(passwordNew, 10);
+
   await customerSchema.findByIdAndUpdate({ _id: id }, { password });
+
   res.status(201).send("Change Password Contact Success");
 };
 
