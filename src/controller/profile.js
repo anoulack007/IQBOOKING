@@ -1,27 +1,55 @@
 import { profileSchema } from "../model/profile.js";
+import multer from "multer";
+import { existsSync, unlinkSync } from "fs";
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./src/Picture");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
 
 const CreateProfile = async (req, res) => {
   const { name, gmail, gender, phone, country } = req.body;
 
-  const findGmail = await profileSchema.findOne({ gmail });
-  if (findGmail) {
-    return res.status(409).send("Profile Email Already Exist.");
-    //   } else {
-    //     const findName = await profileSchema.findOne({ name });
-    //     if (findName) {
-    //       return res.status(409).send("Profile Name Already Exist.");
-    //     }
+  if (!req.file) {
+    const findGmail = await profileSchema.findOne({ gmail });
+
+    if (findGmail) {
+      return res.status(409).send("Profile Email Already Exist.");
+    }
+
+    const DataProfile1 = await profileSchema.create({
+      name,
+      gmail,
+      gender,
+      phone,
+      country,
+    });
+
+    return res.status(200).send(DataProfile1);
+  } else if (req.file) {
+    let image = req.file.filename;
+
+    const findGmail = await profileSchema.findOne({ gmail });
+
+    if (findGmail) {
+      return res.status(409).send("Profile Email Already Exist.");
+    }
+
+    const DataProfile2 = await profileSchema.create({
+      name,
+      gmail,
+      gender,
+      phone,
+      country,
+      image,
+    });
+
+    return res.status(200).send(DataProfile2);
   }
-
-  const DataProfile = await profileSchema.create({
-    name,
-    gmail,
-    gender,
-    phone,
-    country,
-  });
-
-  return res.status(200).send(DataProfile);
 };
 
 const ReadManyProfile = async (req, res) => {
@@ -33,6 +61,7 @@ const ReadProfile = async (req, res) => {
   const { id } = req.params;
 
   const profileId = await profileSchema.findById({ _id: id });
+
   if (!profileId) {
     return res.status(400).send("Fails Find Profile");
   }
@@ -45,19 +74,37 @@ const UpdateProfile = async (req, res) => {
 
   const { name, gmail, gender, phone, country } = req.body;
 
-  const findName = await profileSchema.findOne({ name });
+  if (!req.file) {
+    const UpProfile = await profileSchema.findByIdAndUpdate(
+      { _id: id },
+      { name, gmail, gender, phone, country },
+      { new: true }
+    );
 
-  if (findName) {
-    return res.status(400).send("Name Profile Already Exist");
+    return res.status(200).send(UpProfile);
+  } else if (req.file) {
+    const searchPic = await profileSchema.findById({ _id: id });
+
+    let image = req.file.filename;
+
+    if (existsSync("./src/Picture/" + searchPic.image)) {
+      unlinkSync("./src/Picture/" + searchPic.image, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Update Success");
+        }
+      });
+    }
+
+    const UpProfile = await profileSchema.findByIdAndUpdate(
+      { _id: id },
+      { name, gmail, gender, phone, country, image },
+      { new: true }
+    );
+
+    return res.status(200).send(UpProfile);
   }
-
-  const UpProfile = await profileSchema.findByIdAndUpdate(
-    { _id: id },
-    { name, gmail, gender, phone, country },
-    { new: true }
-  );
-
-  res.status(200).send(UpProfile);
 };
 
 const DeleteProfile = async (req, res) => {
@@ -65,10 +112,20 @@ const DeleteProfile = async (req, res) => {
 
   const deletePro = await profileSchema.findByIdAndDelete({ _id: id });
 
+  if (existsSync("./src/Picture/" + deletePro.image)) {
+    unlinkSync("./src/Picture/" + deletePro.image, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Delete Success");
+      }
+    });
+  }
+
   if (!deletePro) {
-    res.status(400).send("Delete Profile Fails");
+    return res.status(400).send("Delete Profile Fails");
   } else {
-    res.status(200).send("Delete Profile Success");
+    return res.status(200).send("Delete Profile Success");
   }
 };
 
@@ -79,3 +136,7 @@ export const profile = {
   UpdateProfile,
   DeleteProfile,
 };
+
+export const UploadPic = multer({
+  storage: storage,
+}).single("image");

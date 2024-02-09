@@ -2,6 +2,7 @@ import { customerSchema } from "../../model/customer.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { configEnv } from "../../config/envConfig.js";
+import { jwtGen, jwtRefresh } from "../../middleware/jwt.js";
 
 const RegisterContact = async (req, res) => {
   const { contact, password } = req.body;
@@ -22,6 +23,7 @@ const RegisterContact = async (req, res) => {
   return res.status(201).send(customer1);
 };
 
+
 const LoginContact = async (req, res) => {
   const { contact, password } = req.body;
 
@@ -40,17 +42,8 @@ const LoginContact = async (req, res) => {
     return res.send({ message: "password is incorrect", statusCode: 400 });
   }
 
-  const access_token = jwt.sign(
-    { id: UserContact._id},
-    configEnv.ACCESS_TOKEN_SECRET,
-    { expiresIn: "8h" }
-  );
-
-  const refresh_token = jwt.sign(
-    { id: UserContact._id},
-    configEnv.REFRESH_TOKEN_SECRET,
-    { expiresIn: "16h" }
-  );
+  const access_token = jwtGen.jwtGenerate(UserContact);
+  const refresh_token = jwtGen.jwtRefreshToken(UserContact);
 
   res.json({
     access_token,
@@ -58,34 +51,24 @@ const LoginContact = async (req, res) => {
   });
 };
 
+
 const refreshToken = async (req, res, next) => {
+  if (!req.headers["authorization"]) return res.sendStatus(401);
 
-    if (!req.headers["authorization"]) return res.sendStatus(401);
+  const token = req.headers["authorization"].split("Bearer ")[1];
 
-    const token = req.headers["authorization"].split("Bearer ")[1];
- 
-    const decode = jwt.verify(token, configEnv.REFRESH_TOKEN_SECRET);
+  const decode = jwt.verify(token, configEnv.REFRESH_TOKEN_SECRET);
 
-    const findUser = await customerSchema.findById({ _id: decode.id });
+  const findUser = await customerSchema.findById({ _id: decode.id });
 
-    if (!findUser) {
-      return res.send("user not found");
-    }
+  if (!findUser) {
+    return res.send("user not found");
+  }
 
-    const accessToken = jwt.sign(
-      { id: findUser._id},
-      configEnv.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1d" }
-    );
+  const access_token = jwtRefresh.jwtAccess(findUser);
+  const refresh_token = jwtRefresh.jwtReload(findUser);
 
-    const refreshToken = jwt.sign(
-      { id: findUser._id},
-      configEnv.REFRESH_TOKEN_SECRET,
-      { expiresIn: "2d" }
-    );
-
-    return res.json({ accessToken, refreshToken });
-
+  return res.json({ access_token, refresh_token });
 };
 
 const ReadManyContact = async (req, res) => {

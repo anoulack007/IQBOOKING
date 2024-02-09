@@ -16,6 +16,9 @@ const ProfileModel = new mongoose.Schema({
     },
     country:{
         type:String
+    },
+    image:{
+        type:String
     }
 },{timestamps:true})
 
