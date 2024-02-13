@@ -2,7 +2,7 @@ import { mongoose } from "mongoose";
 
 const roomsSchema = new mongoose.Schema({
 
-    imageGallery: [{type: String}],
+    images: [{type: String}],
     roomName: {type: String, required: true},
     is_active_status: {type: Boolean, default: true},
     floor: String,

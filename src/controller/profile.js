@@ -152,4 +152,4 @@ export const profile = {
 
 export const UploadPic = multer({
   storage: storage,
-}).single("image");
+});

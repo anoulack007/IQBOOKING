@@ -9,7 +9,6 @@ import profileRouter from './src/routes/profile.js';
 import authTernAndCondition from './src/routes/termAndCondition.js';
 import authPolicy from './src/routes/policy.js';
 
-import authRouter from './src/routes/AuthContact.js'
 import bookingRoute from './src/routes/BookingRoute.js';
 import roomRoute from './src/routes/RoomRoute.js';
 import favRoute from './src/routes/favoriteRoute.js';
