@@ -13,4 +13,6 @@ profileRouter.put("/profile/update/:id",Validation.jwtValidate,UploadPic,profile
 
 profileRouter.delete("/profile/delete/:id",Validation.jwtValidate,profile.DeleteProfile)
 
+profileRouter.get("/profile/picture/:file",profile.ViewPicture,)
+
 export default profileRouter

@@ -6,10 +6,6 @@ const authGoogle =express.Router()
 
 authGoogle.post("/google/register", AuthGoogle.RegisterGoogle);
 
-authGoogle.put("/google/changePassword/:id", AuthGoogle.ChangePasswordGoogle);
-
-authGoogle.post("/google/refreshToken", AuthGoogle.refreshTokenGoogle);
-
 authGoogle.post("/google/login", AuthGoogle.LoginGoogle);
 
 authGoogle.get("/google/read",Validation.jwtValidate,AuthGoogle.ReadManyGoogle);

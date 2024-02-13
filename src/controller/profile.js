@@ -1,6 +1,12 @@
 import { profileSchema } from "../model/profile.js";
 import multer from "multer";
 import { existsSync, unlinkSync } from "fs";
+import { fileURLToPath } from 'url';
+import { dirname,join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -129,12 +135,19 @@ const DeleteProfile = async (req, res) => {
   }
 };
 
+const ViewPicture = async (req,res)=>{
+  const pic = req.params.file
+  console.log(pic)
+  res.sendFile(join(__dirname,"../Picture/", pic))
+}
+
 export const profile = {
   CreateProfile,
   ReadManyProfile,
   ReadProfile,
   UpdateProfile,
   DeleteProfile,
+  ViewPicture
 };
 
 export const UploadPic = multer({
