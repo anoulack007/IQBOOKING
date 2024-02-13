@@ -1,8 +1,8 @@
 import { mongoose } from "mongoose";
 
 const favoriteSchema = new mongoose.Schema({
-    roomID:{type: mongoose.Schema.Types.ObjectId, ref: 'rooms'},
-    customerID: {type: mongoose.Schema.Types.ObjectId, ref: 'customers'}
+    roomID:{type: mongoose.Schema.Types.ObjectId, ref: 'room'},
+    customerID: {type: String, required: true}
 },
 {timestamps:true});
 

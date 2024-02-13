@@ -6,31 +6,31 @@ const viewBooking = async (req, res) => {
     const info = await bookings.find()
         .populate('customerID')
         .populate('roomID')
-    res.send(info)
+    return res.send(info) 
 };
 
 //View booking list by ID
 const viewBookingID = async (req, res) => {
 
-    try {
+    try {   
 
         const bookingID = req.params.id;
         const check = await bookings.findById(bookingID)
 
         if(!check) {
 
-            res.status(404).json({ message: "Invalid information or not found"});
+            return res.status(404).json({ message: "Invalid information or not found"});
         } else {
 
             const info = await bookings.findById(bookingID)
                 .populate('customerID')
                 .populate('roomID')
-            res.send(info)
+            return res.send(info)
         }     
     } catch (err) {
 
         console.error(err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -39,11 +39,11 @@ const createBooking = async (req, res) => {
 
     try {
 
-        const { /*customerID,*/ roomID, roomName, meetingDate, meetingTime, startTime, endTime, equipment, status_booking_done} = req.body
+        const { customerID, roomID, roomName, meetingDate, meetingTime, startTime, endTime, equipment, status_booking_done} = req.body
 
-        if(/*!customerID ||*/ !roomID || !roomName || !meetingDate) {
+        if(!customerID || !roomID || !roomName || !meetingDate) {
 
-            res.status(400).json({message: "Please fill required information"});
+            return res.status(400).json({message: "Please fill required information"});
         } else {
 
             const info = await bookings.create({
@@ -58,12 +58,12 @@ const createBooking = async (req, res) => {
                 equipment,
                 status_booking_done
             });
-            res.status(200).json({ message: "Booking registered" });
+            return res.status(200).json({ message: "Booking registered" });
         }
     } catch (err) {
 
         console.error(err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 
@@ -75,6 +75,7 @@ const updateBookingID = async (req, res) => {
         const {roomID, roomName, meetingDate, meetingTime, startTime, endTime, equipment, status_booking_done } = req.body
         const bookingID = req.params.id;
         
+        //Duck data from ID is exist or not
         await bookings.findByIdAndUpdate({
             _id: bookingID
         },
@@ -88,11 +89,11 @@ const updateBookingID = async (req, res) => {
             equipment,
             status_booking_done
         })
-        res.status(200).json({ message: `Booking with ${bookingID} is updated`})
+        return res.status(200).json({ message: `Booking with ${bookingID} is updated`})
         
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -105,14 +106,14 @@ const deleteBookingID = async (req, res) => {
         const deleteB = await bookings.findByIdAndDelete(bookingID)
 
         if(!deleteB) {
-            res.status(404).json({ message: `Booking with ID ${bookingID} is invalid or not found`});
+            return res.status(404).json({ message: `Booking with ID ${bookingID} is invalid or not found`});
         }
 
-        res.status(200).json({ message: `Booking with ID ${bookingID} deleted successfully`})
+        return res.status(200).json({ message: `Booking with ID ${bookingID} deleted successfully`})
     } catch (err)  {
 
         console.error(err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 

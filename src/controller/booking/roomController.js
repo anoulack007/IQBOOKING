@@ -1,11 +1,12 @@
-import { rooms } from "../../model/rooms"; 
+import { rooms } from "../../model/rooms.js";
+
 
 //View room list
 const viewRoom = async (req, res) => {
 
     const info = await rooms.find()
-    
-    res.send(info)
+
+    return res.send(info)
 };
 
 //View room list by ID
@@ -16,56 +17,68 @@ const viewRoomID = async (req, res) => {
         const roomID = req.params.id;
         const check = await rooms.findById(roomID)
 
-        if(!check) {
+        if (!check) {
 
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Invalid information or not found"
             });
+
         } else {
-
-            const info = await rooms.findById(roomID)
-
-            res.send(info)
+            return res.send(check)
         }
     } catch (err) {
 
         console.error(err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
 //Create room
 const createRoom = async (req, res) => {
-    
+
     try {
 
         let imageName = []
 
-        const {roomName, floor, type_room, description} = req.body
-        const { image } = req.file
+        const { roomName, floor, type_room, description } = req.body
 
-        for (const i of req.file) {imageName.push(i.originalName)}
+        if (req.file) {
+            const { image } = req.file
 
-        if(!roomName) {
+            for (const i of req.file) { imageName.push(i.originalName) }
 
-            res.status(400).json({
-                message: "Please fill required information"
-            });
-        } else {
-
-            const info = await rooms.create({
-                image,
+            await rooms.create({
+                imageGallery: image,
                 roomName,
                 floor,
                 type_room,
                 description
             });
-            res.status(200).json({ message: "Room registered"});
+
+            return res.status(200).json({ message: "Room registered" });
         }
+
+        if (!roomName) {
+
+            return res.status(400).json({
+                message: "Please fill required information"
+            });
+        } else {
+
+            await rooms.create({
+
+                roomName,
+                floor,
+                type_room,
+                description
+            });
+            return res.status(200).json({ message: "Room registered" });
+        }
+
     } catch (err) {
 
         console.error(err);
-        res.status(500).json({ message: 'Internal Server Error'})
+        return res.status(500).json({ message: 'Internal Server Error' })
     }
 }
 
@@ -74,25 +87,45 @@ const updateRoomID = async (req, res) => {
 
     try {
 
-        let imageName = []
-
-        const {image, roomName, floor, type_room, description} = req.body
         const roomID = req.params.id;
+        const { roomName, floor, type_room, description } = req.body
 
-        await roomID.findByIdAndUpdate({
-            _id: bookingID
-        },
-        {
-            image,
-            roomName,
-            floor,
-            type_room,
-            description
-        });
+        if (req.file) {
+
+            let imageName = []
+
+            for (const i of req.file) { imageName.push(i.originalName) }
+
+
+            await rooms.findByIdAndUpdate({
+                _id: roomID
+            },
+                {
+                    imageGallery: imageName,
+                    roomName,
+                    floor,
+                    type_room,
+                    description
+                });
+        } else {
+
+            await rooms.findByIdAndUpdate({
+                _id: roomID
+            },
+                {
+                    roomName,
+                    floor,
+                    type_room,
+                    description
+                });
+            return res.status(200).json({ message: "Success!" })
+
+        }
+
     } catch (err) {
 
         console.error(err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
@@ -104,15 +137,15 @@ const deleteRoomID = async (req, res) => {
         const roomID = req.params.id
         const deleteR = await rooms.findByIdAndDelete(roomID)
 
-        if(!deleteR) {
-            res.status(404).json({ message: `Room with ID ${roomID} is invalid or not found`});
+        if (!deleteR) {
+            return res.status(404).json({ message: `Room with ID ${roomID} is invalid or not found` });
         }
 
-        res.status(200).json({ message: `Room with ID ${roomID} is invalid or not found`})
+        return res.status(200).json({ message: `Room with ID ${roomID} is removed` })
     } catch (err) {
 
         console.error(err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 export const r = {
@@ -122,4 +155,4 @@ export const r = {
     createRoom,
     updateRoomID,
     deleteRoomID
-}
+};
