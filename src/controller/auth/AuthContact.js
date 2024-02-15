@@ -28,7 +28,7 @@ const LoginContact = async (req, res) => {
   const { contact, password } = req.body;
 
   if (!contact || !password)
-    return res.send({ message: "User or password not found", statusCode: 400 });
+    return res.send({ message: "User or password not found", statusCode: 400 }).status(400);
 
   const UserContact = await customerSchema.findOne({ contact });
 
@@ -39,7 +39,7 @@ const LoginContact = async (req, res) => {
   const compare1 = await bcrypt.compare(password, UserContact.password);
 
   if (!compare1) {
-    return res.send({ message: "password is incorrect", statusCode: 400 });
+    return res.send({ message: "password is incorrect", statusCode: 400 }).status(400);
   }
 
   const access_token = jwtGen.jwtGenerate(UserContact);
