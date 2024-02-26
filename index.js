@@ -8,6 +8,7 @@ import authFacebook from './src/routes/Auth/AuthFacebook.js';
 import profileRouter from './src/routes/profile.js';
 import authTernAndCondition from './src/routes/termAndCondition.js';
 import authPolicy from './src/routes/policy.js';
+import cors from 'cors';
 
 import bookingRoute from './src/routes/BookingRoute.js';
 import roomRoute from './src/routes/RoomRoute.js';
@@ -18,6 +19,8 @@ import cors from 'cors';
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
+
 
 connectDB()
 
