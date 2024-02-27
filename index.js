@@ -13,6 +13,7 @@ import bookingRoute from './src/routes/BookingRoute.js';
 import roomRoute from './src/routes/RoomRoute.js';
 import favRoute from './src/routes/favoriteRoute.js';
 import notificationTokenRoute from './src/routes/notificationTokenRoute.js';
+import cors from 'cors';
 
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(authGoogle)
 app.use(authFacebook)
 app.use(authTernAndCondition)
 app.use(authPolicy)
+app.use(cors)
 
 
 app.use(express.static('Picture'))

@@ -36,7 +36,6 @@ const viewRoomID = async (req, res) => {
 //Create room
 const createRoom = async (req, res) => {
 
-    // try {
 
         let imageName = []
 
@@ -74,11 +73,7 @@ const createRoom = async (req, res) => {
             return res.status(200).json({ message: "Room registered" });
         }
 
-    // } catch (err) {
-
-    //     console.error(err);
-    //     return res.status(500).json({ message: 'Internal Server Error' })
-    // }
+    
 }
 
 //Update room information by ID
@@ -89,11 +84,11 @@ const updateRoomID = async (req, res) => {
         const roomID = req.params.id;
         const { roomName, floor, type_room, description } = req.body
 
-        if (req.file) {
+        if (req.files) {
 
             let imageName = []
 
-            for (const i of req.file) { imageName.push(i.originalName) }
+            for (const i of req.files) { imageName.push(i.originalname) }
 
 
             await rooms.findByIdAndUpdate({
@@ -106,6 +101,8 @@ const updateRoomID = async (req, res) => {
                     type_room,
                     description
                 });
+                
+                return res.status(200).json({message: "Success!"})
         } else {
 
             await rooms.findByIdAndUpdate({

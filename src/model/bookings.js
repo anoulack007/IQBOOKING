@@ -7,7 +7,7 @@ const bookingSchema = new mongoose.Schema({
     roomName: {type: String, required: true},
     meetingDate: String,
     meetingTime: String,
-    StartTime: String,
+    startTime: String,
     endTime: String,
     equipment:{type: String, enum:["TV", "Microphone", "Board", "PlasmaDisplay", "Wifi", "Capacity15"]},
     status_booking_done:{type: Boolean, default: true}
