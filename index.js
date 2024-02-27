@@ -18,6 +18,7 @@ import cors from 'cors';
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors())
 
 connectDB()
 
@@ -27,7 +28,6 @@ app.use(authGoogle)
 app.use(authFacebook)
 app.use(authTernAndCondition)
 app.use(authPolicy)
-app.use(cors)
 
 
 app.use(express.static('Picture'))
