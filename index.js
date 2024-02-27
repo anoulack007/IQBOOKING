@@ -15,7 +15,6 @@ import bookingRoute from './src/routes/BookingRoute.js';
 import roomRoute from './src/routes/RoomRoute.js';
 import favRoute from './src/routes/favoriteRoute.js';
 import notificationTokenRoute from './src/routes/notificationTokenRoute.js';
-import cors from 'cors';
 
 
 const app = express();
