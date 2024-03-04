@@ -30,7 +30,6 @@ app.use(authGoogle)
 app.use(authFacebook)
 app.use(authTernAndCondition)
 app.use(authPolicy)
-app.use(cors)
 
 
 app.use(express.static('Picture'))

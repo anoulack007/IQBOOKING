@@ -6,7 +6,7 @@ const viewRoom = async (req, res) => {
 
     const info = await rooms.find()
 
-    return res.send(info)
+    return res.status(200).send(info)
 };
 
 //View room list by ID
@@ -82,7 +82,7 @@ const updateRoomID = async (req, res) => {
     try {
 
         const roomID = req.params.id;
-        const { roomName, floor, type_room, description } = req.body
+        const { roomName, floor, type_room, description ,is_active_status} = req.body
 
         if (req.files) {
 
@@ -112,6 +112,7 @@ const updateRoomID = async (req, res) => {
                     roomName,
                     floor,
                     type_room,
+                    is_active_status,
                     description
                 });
             return res.status(200).json({ message: "Success!" })
