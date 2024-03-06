@@ -7,10 +7,9 @@ const roomRoute = express.Router()
 //Room Route
 roomRoute.get("/api/room",Validation.jwtValidate,r.viewRoom);
 roomRoute.get("/api/room/:id",Validation.jwtValidate, r.viewRoomID);
+roomRoute.get("/api/room/picture/:file",profile.ViewPicture)
 roomRoute.post("/api/create/room",Validation.jwtValidate,UploadPic.array('images'), r.createRoom);
 roomRoute.put("/api/update/room/:id",Validation.jwtValidate,UploadPic.array('images'), r.updateRoomID);
 roomRoute.delete("/api/delete/room/:id",Validation.jwtValidate, r.deleteRoomID);
-
-roomRoute.get("/api/room/picture/:file",Validation.jwtValidate,profile.ViewPicture,)
 
 export default roomRoute;

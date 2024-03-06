@@ -5,7 +5,7 @@ import { configEnv } from "../config/envConfig.js";
 const jwtValidate = async (req, res, next) => {
   try {
     if (!req.headers["authorization"]) {
-      return res.sendStatus(401).send("Token Invalid");
+      return res.status(401).send("Token Invalid");
     }
   
     const token = req.headers["authorization"].split("Bearer ")[1];
@@ -15,12 +15,12 @@ const jwtValidate = async (req, res, next) => {
     const UserContact = await customerSchema.findById({ _id: decode.id });
 
     if (!UserContact) {
-      return res.sendStatus(401).send("Token Invalid");
+      return res.status(401).send("Token Invalid");
     }
 
     next();
   } catch (error) {
-    return res.sendStatus(403);
+    return res.status(403);
   }
 };
 
