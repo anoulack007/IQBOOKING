@@ -3,8 +3,9 @@ import { rooms } from "../../model/rooms.js";
 
 //View room list
 const viewRoom = async (req, res) => {
-
     const info = await rooms.find()
+    console.log(info);
+    
 
     return res.status(200).send(info)
 };
@@ -39,12 +40,12 @@ const createRoom = async (req, res) => {
 
         let imageName = []
 
-        const { roomName, floor, type_room, description } = req.body
+        const { roomName, floor, type_room, description, is_active_status } = req.body
 
         if (req.files) {
-
+            console.log(req.files)
             for (const i of req.files) { imageName.push(i.originalname) }
-
+                console.log(imageName)
             await rooms.create({
                 images: imageName,
                 roomName,
@@ -68,6 +69,7 @@ const createRoom = async (req, res) => {
                 roomName,
                 floor,
                 type_room,
+                is_active_status,
                 description
             });
             return res.status(200).json({ message: "Room registered" });
@@ -82,7 +84,7 @@ const updateRoomID = async (req, res) => {
     try {
 
         const roomID = req.params.id;
-        const { roomName, floor, type_room, description ,is_active_status} = req.body
+        const { roomName, floor, type_room, description,is_active_status } = req.body
 
         if (req.files) {
 
@@ -99,7 +101,8 @@ const updateRoomID = async (req, res) => {
                     roomName,
                     floor,
                     type_room,
-                    description
+                    description,
+                    is_active_status
                 });
                 
                 return res.status(200).json({message: "Success!"})
@@ -112,8 +115,8 @@ const updateRoomID = async (req, res) => {
                     roomName,
                     floor,
                     type_room,
-                    is_active_status,
-                    description
+                    description,
+                    is_active_status
                 });
             return res.status(200).json({ message: "Success!" })
 

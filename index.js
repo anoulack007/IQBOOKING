@@ -32,8 +32,8 @@ app.use(authTernAndCondition)
 app.use(authPolicy)
 
 
+
 app.use(express.static('Picture'))
-app.use(authRouter);
 app.use(bookingRoute);
 app.use(roomRoute);
 app.use(favRoute);
