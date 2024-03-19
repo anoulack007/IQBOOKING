@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { configEnv } from "../../config/envConfig.js";
 import { jwtGen, jwtRefresh } from "../../middleware/jwt.js";
+import { profileSchema } from "../../model/profile.js";
 
 const RegisterContact = async (req, res) => {
   const { contact, password } = req.body;
@@ -15,7 +16,12 @@ const RegisterContact = async (req, res) => {
 
   const encryptPassword = await bcrypt.hash(password, 10);
 
+  const profile = await profileSchema.create({
+    gender: "Other"
+  })
+
   const customer1 = await customerSchema.create({
+    profileId:profile._id ,
     contact,
     password: encryptPassword,
   });
@@ -28,7 +34,7 @@ const LoginContact = async (req, res) => {
   const { contact, password } = req.body;
 
   if (!contact || !password)
-    return res.send({ message: "User or password not found", statusCode: 400 }).status(400);
+    return res.status(400).send({ message: "User or password not found", statusCode: 400 });
 
   const UserContact = await customerSchema.findOne({ contact });
 
@@ -39,7 +45,7 @@ const LoginContact = async (req, res) => {
   const compare1 = await bcrypt.compare(password, UserContact.password);
 
   if (!compare1) {
-    return res.send({ message: "password is incorrect", statusCode: 400 }).status(400);
+    return res.status(400).send({ message: "password is incorrect", statusCode: 400 });
   }
 
   const access_token = jwtGen.jwtGenerate(UserContact);

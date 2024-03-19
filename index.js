@@ -21,7 +21,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-
 connectDB()
 
 app.use(authRouter)
@@ -33,7 +32,6 @@ app.use(authPolicy)
 
 
 app.use(express.static('Picture'))
-app.use(authRouter);
 app.use(bookingRoute);
 app.use(roomRoute);
 app.use(favRoute);

@@ -9,6 +9,7 @@ const jwtGenerate = (contactUser) => {
   );
   return access_token;
 };
+
 const jwtRefreshToken = (contactUser) => {
   const refresh_token = jwt.sign(
     { id: contactUser._id },

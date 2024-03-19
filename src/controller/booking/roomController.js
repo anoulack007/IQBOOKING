@@ -3,10 +3,11 @@ import { rooms } from "../../model/rooms.js";
 
 //View room list
 const viewRoom = async (req, res) => {
-
     const info = await rooms.find()
+    console.log(info);
+    
 
-    return res.send(info)
+    return res.status(200).send(info)
 };
 
 //View room list by ID
@@ -36,16 +37,15 @@ const viewRoomID = async (req, res) => {
 //Create room
 const createRoom = async (req, res) => {
 
-    // try {
 
         let imageName = []
 
-        const { roomName, floor, type_room, description } = req.body
+        const { roomName, floor, type_room, description, is_active_status } = req.body
 
         if (req.files) {
-
+            console.log(req.files)
             for (const i of req.files) { imageName.push(i.originalname) }
-
+                console.log(imageName)
             await rooms.create({
                 images: imageName,
                 roomName,
@@ -69,16 +69,13 @@ const createRoom = async (req, res) => {
                 roomName,
                 floor,
                 type_room,
+                is_active_status,
                 description
             });
             return res.status(200).json({ message: "Room registered" });
         }
 
-    // } catch (err) {
-
-    //     console.error(err);
-    //     return res.status(500).json({ message: 'Internal Server Error' })
-    // }
+    
 }
 
 //Update room information by ID
@@ -87,13 +84,13 @@ const updateRoomID = async (req, res) => {
     try {
 
         const roomID = req.params.id;
-        const { roomName, floor, type_room, description } = req.body
+        const { roomName, floor, type_room, description,is_active_status } = req.body
 
-        if (req.file) {
+        if (req.files) {
 
             let imageName = []
 
-            for (const i of req.file) { imageName.push(i.originalName) }
+            for (const i of req.files) { imageName.push(i.originalname) }
 
 
             await rooms.findByIdAndUpdate({
@@ -104,8 +101,11 @@ const updateRoomID = async (req, res) => {
                     roomName,
                     floor,
                     type_room,
-                    description
+                    description,
+                    is_active_status
                 });
+                
+                return res.status(200).json({message: "Success!"})
         } else {
 
             await rooms.findByIdAndUpdate({
@@ -115,7 +115,8 @@ const updateRoomID = async (req, res) => {
                     roomName,
                     floor,
                     type_room,
-                    description
+                    description,
+                    is_active_status
                 });
             return res.status(200).json({ message: "Success!" })
 
