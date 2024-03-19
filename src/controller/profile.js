@@ -65,7 +65,7 @@ const ReadManyProfile = async (req, res) => {
 
 const ReadProfile = async (req, res) => {
   const { profileId} = req.user
-  console.log(req.user)
+
 
   const profile = await profileSchema.findById({ _id: profileId });
 
