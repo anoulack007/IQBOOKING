@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { configEnv } from "../../config/envConfig.js";
 import { jwtGen, jwtRefresh } from "../../middleware/jwt.js";
+import { profileSchema } from "../../model/profile.js";
 
 const RegisterContact = async (req, res) => {
   const { contact, password } = req.body;
@@ -15,7 +16,12 @@ const RegisterContact = async (req, res) => {
 
   const encryptPassword = await bcrypt.hash(password, 10);
 
+  const profile = await profileSchema.create({
+    gender: "Other"
+  })
+
   const customer1 = await customerSchema.create({
+    profileId:profile._id ,
     contact,
     password: encryptPassword,
   });

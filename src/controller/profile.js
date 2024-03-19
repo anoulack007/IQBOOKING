@@ -64,15 +64,16 @@ const ReadManyProfile = async (req, res) => {
 };
 
 const ReadProfile = async (req, res) => {
-  const { id } = req.params;
+  const { profileId} = req.user
+  console.log(req.user)
 
-  const profileId = await profileSchema.findById({ _id: id });
+  const profile = await profileSchema.findById({ _id: profileId });
 
-  if (!profileId) {
+  if (!profile) {
     return res.status(400).send("Fails Find Profile");
   }
 
-  res.status(200).send(profileId);
+  res.status(200).send(profile);
 };
 
 const UpdateProfile = async (req, res) => {

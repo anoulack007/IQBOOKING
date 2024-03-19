@@ -5,9 +5,9 @@ const profileRouter = express.Router()
 
 profileRouter.post("/api/profile/create",Validation.jwtValidate,UploadPic.single('images'),profile.CreateProfile,)
 
-profileRouter.get("/api/profile/read",Validation.jwtValidate,profile.ReadManyProfile)
+profileRouter.get("/api/profile/reads",Validation.jwtValidate,profile.ReadManyProfile)
 
-profileRouter.get("/api/profile/read/:id",Validation.jwtValidate,profile.ReadProfile)
+profileRouter.get("/api/profile/read",Validation.jwtValidate,profile.ReadProfile)
 
 profileRouter.put("/api/profile/update/:id",Validation.jwtValidate,UploadPic.single('images'),profile.UpdateProfile,)
 
