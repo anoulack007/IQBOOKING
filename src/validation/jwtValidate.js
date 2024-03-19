@@ -10,14 +10,16 @@ const jwtValidate = async (req, res, next) => {
   
     const token = req.headers["authorization"].split("Bearer ")[1];
 
-    const decode = jwt.verify(token, configEnv.ACCESS_TOKEN_SECRET);
-
+    const decode = jwt.verify(token, configEnv.ACCESS_TOKEN_SECRET,(error,user)=>{if(error){return error} return user});
+    
+    if(decode.id === undefined) return res.status(401).send("UnAuthorization")
     const UserContact = await customerSchema.findById({ _id: decode.id });
 
     if (!UserContact) {
       return res.status(401).send("Token Invalid");
     }
-
+    req.user = UserContact
+    console.log(req.user)
     next();
   } catch (error) {
     return res.status(403);
