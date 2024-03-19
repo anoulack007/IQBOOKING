@@ -66,6 +66,7 @@ const ReadManyProfile = async (req, res) => {
 const ReadProfile = async (req, res) => {
   const { profileId} = req.user
 
+  if(!profileId) return  res.status(404).send('Profile Not found');
 
   const profile = await profileSchema.findById({ _id: profileId });
 
