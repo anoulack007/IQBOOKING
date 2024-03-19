@@ -57,6 +57,14 @@ const createRoom = async (req, res) => {
             return res.status(200).json({ message: "Room registered" });
         }
 
+        const roomCheck = await rooms.findOne({ roomName: roomName });
+
+        if (roomCheck) {
+            return res.status(400).json({
+                message: "Room is exist"
+            });
+        }
+
         if (!roomName) {
 
             return res.status(400).json({
@@ -85,6 +93,14 @@ const updateRoomID = async (req, res) => {
 
         const roomID = req.params.id;
         const { roomName, floor, type_room, description,is_active_status } = req.body
+
+        const roomCheck = await rooms.findOne({ roomName: roomName });
+
+        if (roomCheck) {
+            return res.status(400).json({
+                message: "Room is exist"
+            });
+        }
 
         if (req.files) {
 
