@@ -20,6 +20,7 @@ const jwtValidate = async (req, res, next) => {
     if (!UserContact) {
       return res.status(401).send("Token Invalid");
     }
+    
     req.user = UserContact
 
     next();

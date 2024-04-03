@@ -17,6 +17,12 @@ const storage = multer.diskStorage({
   },
 });
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const CreateProfile = async (req, res) => {
   const { name, gmail, gender, phone, country } = req.body;
 
@@ -63,6 +69,12 @@ const ReadManyProfile = async (req, res) => {
   return res.status(200).send(findMany);
 };
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const ReadProfile = async (req, res) => {
   const { profileId} = req.user
 

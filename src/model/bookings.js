@@ -9,7 +9,7 @@ const bookingSchema = new mongoose.Schema({
     meetingTime: String,
     startTime: String,
     endTime: String,
-    equipment:{type: String, enum:["TV", "Microphone", "Board", "PlasmaDisplay", "Wifi", "Capacity15"]},
+    // equipment:{type: String, enum:["TV", "Microphone", "Board", "PlasmaDisplay", "Wifi", "Capacity15"]},
     status_booking_done:{type: Boolean, default: true}
 },
 {timestamps:true});

@@ -45,12 +45,12 @@ const createBooking = async (req, res) => {
 
     try {
 
-        const { customerID, roomID, roomName, meetingDate, meetingTime, startTime, endTime, equipment} = req.body
+        const { customerID, roomID, roomName, meetingDate, meetingTime, startTime, endTime } = req.body
 
         if(!customerID || !roomID || !roomName || !meetingDate) {
 
             return res.status(400).json({message: "Please fill required information"});
-        } else {
+        }else if({...req.body}){
 
             const info = await bookings.create({
     
@@ -61,7 +61,7 @@ const createBooking = async (req, res) => {
                 meetingTime,
                 startTime,
                 endTime,
-                equipment
+                
             });
             return res.status(200).json({ message: "Booking registered" });
         }
@@ -77,7 +77,7 @@ const updateBookingID = async (req, res) => {
 
     try{
         
-        const {roomID, roomName, meetingDate, meetingTime, startTime, endTime, equipment } = req.body
+        const {roomID, roomName, meetingDate, meetingTime, startTime, endTime,  } = req.body
         const bookingID = req.params.id;
         
         //Duck data from ID is exist or not
@@ -91,7 +91,7 @@ const updateBookingID = async (req, res) => {
             meetingTime,
             startTime,
             endTime,
-            equipment
+            
         })
         return res.status(200).json({ message: `Booking with ${bookingID} is updated`})
         
