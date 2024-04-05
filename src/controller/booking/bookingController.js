@@ -63,7 +63,7 @@ const createBooking = async (req, res) => {
                 endTime,
                 
             });
-            return res.status(200).json({ message: "Booking registered" });
+            return res.status(200).send(info).json({ message: "Booking registered" });
         }
     } catch (err) {
 
