@@ -49,7 +49,7 @@ const createBooking = async (req, res) => {
         const { customerID, roomID, roomName, meetingDate, meetingTime, startTime, endTime } = req.body
 
 
-        if(!customerID || !roomID || !roomName || !meetingDate) {
+        if(!customerID || !roomID || !roomName || !meetingDate || !startTime || !endTime) {
 
             return res.status(400).json({message: "Please fill required information"});
         }else if({...req.body}){
