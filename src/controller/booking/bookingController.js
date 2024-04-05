@@ -43,9 +43,11 @@ const viewBookingID = async (req, res) => {
 //Create booking
 const createBooking = async (req, res) => {
 
-    try {
+    // try {
 
+        console.log(req.body)
         const { customerID, roomID, roomName, meetingDate, meetingTime, startTime, endTime } = req.body
+
 
         if(!customerID || !roomID || !roomName || !meetingDate) {
 
@@ -57,19 +59,19 @@ const createBooking = async (req, res) => {
                 customerID,
                 roomID,
                 roomName,
-                meetingDate,
+                meetingDate ,
                 meetingTime,
                 startTime,
                 endTime,
                 
             });
-            return res.status(200).send(info).json({ message: "Booking registered" });
+            return res.status(200).send(info);
         }
-    } catch (err) {
+    // } catch (err) {
 
-        console.error(err);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
+    //     console.error(err);
+    //     return res.status(500).json({ message: 'Internal Server Error' });
+    // }
 };
 
 //Update booking information by ID
