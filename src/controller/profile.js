@@ -153,7 +153,7 @@ const ViewPicture = async (req,res)=>{
   const pic = req.params.file
   console.log(pic)
   // res.sendFile(join(__dirname,"../Picture/", pic))
-  res.sendFile(join(__dirname,"/opt/render/project/src/src/Picture/", pic))
+  res.sendFile(join(__dirname, pic))
 
 }
 
