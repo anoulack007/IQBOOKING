@@ -17,6 +17,12 @@ const storage = multer.diskStorage({
   },
 });
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const CreateProfile = async (req, res) => {
   const { name, gmail, gender, phone, country } = req.body;
 
@@ -63,6 +69,12 @@ const ReadManyProfile = async (req, res) => {
   return res.status(200).send(findMany);
 };
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const ReadProfile = async (req, res) => {
   const { profileId} = req.user
 
@@ -140,7 +152,9 @@ const DeleteProfile = async (req, res) => {
 const ViewPicture = async (req,res)=>{
   const pic = req.params.file
   console.log(pic)
-  res.sendFile(join(__dirname,"../Picture/", pic))
+  // res.sendFile(join(__dirname,"../Picture/", pic))
+  res.sendFile(join(__dirname, pic))
+
 }
 
 export const profile = {

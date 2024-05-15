@@ -107,6 +107,7 @@ const updateRoomID = async (req, res) => {
             let imageName = []
 
             for (const i of req.files) { imageName.push(i.originalname) }
+            
 
 
             await rooms.findByIdAndUpdate({

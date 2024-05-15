@@ -47,33 +47,35 @@ const viewBookingID = async (req, res) => {
 //Create booking
 const createBooking = async (req, res) => {
 
-    try {
+    // try {
 
-        const { customerID, roomID, roomName, meetingDate, meetingTime, startTime, endTime, equipment} = req.body
+        console.log(req.body)
+        const { customerID, roomID, roomName, meetingDate, meetingTime, startTime, endTime } = req.body
 
-        if(!customerID || !roomID || !roomName || !meetingDate) {
+
+        if(!customerID || !roomID || !roomName || !meetingDate || !startTime || !endTime) {
 
             return res.status(400).json({message: "Please fill required information"});
-        } else {
+        }else if({...req.body}){
 
             const info = await bookings.create({
     
                 customerID,
                 roomID,
                 roomName,
-                meetingDate,
+                meetingDate ,
                 meetingTime,
                 startTime,
                 endTime,
-                equipment
+                
             });
-            return res.status(200).json({ message: "Booking registered" });
+            return res.status(200).send(info);
         }
-    } catch (err) {
+    // } catch (err) {
 
-        console.error(err);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
+    //     console.error(err);
+    //     return res.status(500).json({ message: 'Internal Server Error' });
+    // }
 };
 
 //Update booking information by ID
@@ -81,7 +83,7 @@ const updateBookingID = async (req, res) => {
 
     try{
         
-        const {roomID, roomName, meetingDate, meetingTime, startTime, endTime, equipment } = req.body
+        const {roomID, roomName, meetingDate, meetingTime, startTime, endTime,  } = req.body
         const bookingID = req.params.id;
         
         //Duck data from ID is exist or not
@@ -95,7 +97,7 @@ const updateBookingID = async (req, res) => {
             meetingTime,
             startTime,
             endTime,
-            equipment
+            
         })
         return res.status(200).json({ message: `Booking with ${bookingID} is updated`})
         
