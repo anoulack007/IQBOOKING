@@ -3,7 +3,11 @@ import { bookings } from "../../model/bookings.js";
 //View booking list
 const viewBooking = async (req, res) => {
 
-    const info = await bookings.find()
+  const { _id } = req.user
+  console.log(_id);
+    
+
+    const info = await bookings.find({customerID: _id})
         .populate('customerID')
         .populate('roomID')
     return res.send(info) 
