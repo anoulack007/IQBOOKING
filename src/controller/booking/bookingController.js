@@ -1,11 +1,10 @@
 import { bookings } from "../../model/bookings.js";
+import { customerSchema } from "../../model/customer.js";
 
 //View booking list
 const viewBooking = async (req, res) => {
 
-  const { _id } = req.user
-  console.log(_id);
-    
+  const { _id } = req.user    
 
     const info = await bookings.find({customerID: _id})
         .populate('customerID')
@@ -49,8 +48,13 @@ const createBooking = async (req, res) => {
 
     // try {
 
-        console.log(req.body)
-        const { customerID, roomID, roomName, meetingDate, meetingTime, startTime, endTime } = req.body
+        const { _id } = req.user
+
+        const customerID = await customerSchema.findById({
+            _id:_id
+        })
+
+        const { roomID, roomName, meetingDate, meetingTime, startTime, endTime } = req.body
 
 
         if(!customerID || !roomID || !roomName || !meetingDate || !startTime || !endTime) {
@@ -60,7 +64,7 @@ const createBooking = async (req, res) => {
 
             const info = await bookings.create({
     
-                customerID,
+                customerID:customerID,
                 roomID,
                 roomName,
                 meetingDate ,
