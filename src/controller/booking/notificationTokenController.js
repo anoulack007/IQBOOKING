@@ -1,9 +1,16 @@
+import { customerSchema } from "../../model/customer.js";
 import { notification } from "../../model/notificationToken.js";
 
 //Create notification token 
 const createNotificationToken = async (req, res) => {
-    
-    const {customerID, token} = req.body
+
+    const { _id } = req.user
+
+    const customerID = await customerSchema.findById({
+        _id: _id
+    })
+
+    const {token} = req.body
 
     try {
 
@@ -14,7 +21,7 @@ const createNotificationToken = async (req, res) => {
 
             await notification.create({
 
-                customerID,
+                customerID:customerID,
                 token
             });
         }
