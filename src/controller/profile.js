@@ -90,20 +90,20 @@ const ReadProfile = async (req, res) => {
 };
 
 const UpdateProfile = async (req, res) => {
-  const { id } = req.params;
+  const { profileId } = req.user;
 
   const { name, gmail, gender, phone, country } = req.body;
 
   if (!req.file) {
     const UpProfile = await profileSchema.findByIdAndUpdate(
-      { _id: id },
+      { _id: profileId },
       { name, gmail, gender, phone, country },
       { new: true }
     );
 
     return res.status(200).send(UpProfile);
   } else if (req.file) {
-    const searchPic = await profileSchema.findById({ _id: id });
+    const searchPic = await profileSchema.findById({ _id: profileId });
 
     let image = req.file.filename;
 
@@ -118,7 +118,7 @@ const UpdateProfile = async (req, res) => {
     }
 
     const UpProfile = await profileSchema.findByIdAndUpdate(
-      { _id: id },
+      { _id: profileId },
       { name, gmail, gender, phone, country, image },
       { new: true }
     );

@@ -9,7 +9,7 @@ profileRouter.get("/api/profile/reads",Validation.jwtValidate,profile.ReadManyPr
 
 profileRouter.get("/api/profile/read",Validation.jwtValidate,profile.ReadProfile)
 
-profileRouter.put("/api/profile/update/:id",Validation.jwtValidate,UploadPic.single('images'),profile.UpdateProfile,)
+profileRouter.put("/api/profile/update/",Validation.jwtValidate,UploadPic.single('images'),profile.UpdateProfile,)
 
 profileRouter.delete("/api/profile/delete/:id",Validation.jwtValidate,profile.DeleteProfile)
 
