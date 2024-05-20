@@ -128,9 +128,10 @@ const UpdateProfile = async (req, res) => {
 };
 
 const DeleteProfile = async (req, res) => {
-  const { id } = req.params;
+  const { profileId} = req.user
 
-  const deletePro = await profileSchema.findByIdAndDelete({ _id: id });
+
+  const deletePro = await profileSchema.findByIdAndDelete({ _id: profileId });
 
   if (existsSync("./src/Picture/" + deletePro.image)) {
     unlinkSync("./src/Picture/" + deletePro.image, (err) => {
