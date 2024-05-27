@@ -4,22 +4,23 @@ import { favorite } from "../../model/favorite.js";
 //View Favorite list
 const viewFav = async (req, res) => {
     try {
-      const info = await favorite.find().populate('roomID').populate('customerID');
-  
-      return res.status(200).send(info);
+        const { _id } = req.user
+
+        const info = await favorite.find({ customerID: _id }).populate('roomID').populate('customerID');
+        return res.status(200).send(info);
     } catch (error) {
-      console.error('Error fetching favorites:', error);
-      return res.status(500).send({ message: 'An error occurred while fetching favorites.' });
+        console.error('Error fetching favorites:', error);
+        return res.status(500).send({ message: 'An error occurred while fetching favorites.' });
     }
-  };
-  
+};
+
 
 //View Favorite list by ID
 const viewFavID = async (req, res) => {
 
     try {
-        const {_id} = req.user
-        const customerID = await customerSchema.findById({_id:_id})
+        const { _id } = req.user
+        const customerID = await customerSchema.findById({ _id: _id })
         // const favID = req.params.id;
         const check = await favorite.findById(customerID)
             .populate('roomID')
@@ -42,35 +43,35 @@ const viewFavID = async (req, res) => {
 //Create favorite 
 const createFav = async (req, res) => {
 
-    const {_id} = req.user
+    const { _id } = req.user
 
     const { roomID } = req.body
 
     // const customerID = await customerSchema.findById({_id:_id})
-    
+
     // try {
 
-        if(!roomID || !_id){
+    if (!roomID || !_id) {
 
-            return res.status(400).json({ message: "Please fill required information!"})
-        }
+        return res.status(400).json({ message: "Please fill required information!" })
+    }
 
-        const info = await favorite.findOne({roomID: roomID})
+    const info = await favorite.findOne({ roomID: roomID })
 
-        if(info) {
+    if (info) {
 
-            return res.status(400).json({ message: "Favorite is exist"})
-        } else {
-            
-           const favoriteData = await favorite.create({
-                roomID,
-                customerID:_id
-            });
+        return res.status(400).json({ message: "Favorite is exist" })
+    } else {
 
-            return res.send(favoriteData).status(200)
-        }
-        
-        
+        const favoriteData = await favorite.create({
+            roomID,
+            customerID: _id
+        });
+
+        return res.send(favoriteData).status(200)
+    }
+
+
     // } catch (err) {
 
     //     console.error(err);
@@ -86,13 +87,13 @@ const updateFavID = async (req, res) => {
 
     try {
 
-        const info = await favorite.find({customerID: customerID})
+        const info = await favorite.find({ customerID: customerID })
 
-        if(info) {
-            return res.status(400).json({ message: "customerID are exist"})
+        if (info) {
+            return res.status(400).json({ message: "customerID are exist" })
         }
 
-            await favorite.findByIdAndUpdate(
+        await favorite.findByIdAndUpdate(
             {
                 _id: id
             },
@@ -101,7 +102,7 @@ const updateFavID = async (req, res) => {
                 customerID
 
             })
-            return res.status(200).json({ message: "Success!"})
+        return res.status(200).json({ message: "Success!" })
     } catch (err) {
 
         console.error(err);

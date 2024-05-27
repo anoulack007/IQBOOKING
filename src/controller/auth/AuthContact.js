@@ -5,6 +5,7 @@ import { configEnv } from "../../config/envConfig.js";
 import { jwtGen, jwtRefresh } from "../../middleware/jwt.js";
 import { profileSchema } from "../../model/profile.js";
 
+
 const RegisterContact = async (req, res) => {
   const { contact, password } = req.body;
 
