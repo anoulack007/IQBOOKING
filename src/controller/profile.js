@@ -1,5 +1,5 @@
 import { profileSchema } from "../model/profile.js";
-import multer from "multer";
+import { v2 as cloudinary } from 'cloudinary';
 import { existsSync, unlinkSync } from "fs";
 import { fileURLToPath } from 'url';
 import { dirname,join } from 'path';
@@ -8,14 +8,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./src/Picture");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
 
 /**
  * 
@@ -91,7 +83,6 @@ const ReadProfile = async (req, res) => {
 
 const UpdateProfile = async (req, res) => {
   const { profileId } = req.user;
-
   const { name, gmail, gender, phone, country } = req.body;
 
   if (!req.file) {
@@ -104,8 +95,8 @@ const UpdateProfile = async (req, res) => {
     return res.status(200).send(UpProfile);
   } else if (req.file) {
     const searchPic = await profileSchema.findById({ _id: profileId });
-
-    let image = req.file.filename;
+    
+    let image = req.file.path;
 
     if (existsSync("./src/Picture/" + searchPic.image)) {
       unlinkSync("./src/Picture/" + searchPic.image, (err) => {
@@ -150,6 +141,20 @@ const DeleteProfile = async (req, res) => {
   }
 };
 
+const viewPic = async(req,res)=>{
+  try {
+    // Retrieve the image URL from Cloudinary based on the image ID
+    const imageUrl = cloudinary.url(req.params.imageId);
+    console.log(imageUrl);
+    
+    // Send the image URL in the response
+    res.status(200).json({ imageUrl: imageUrl });
+  } catch (error) {
+    // Handle any errors
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 const ViewPicture = async (req,res)=>{
   const pic = req.params.file
   console.log(pic)
@@ -164,9 +169,10 @@ export const profile = {
   ReadProfile,
   UpdateProfile,
   DeleteProfile,
-  ViewPicture
+  ViewPicture,
+  viewPic
 };
 
-export const UploadPic = multer({
-  storage: storage,
-});
+// export const UploadPic = multer({
+//   storage: storage,
+// });

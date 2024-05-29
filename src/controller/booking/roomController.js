@@ -165,11 +165,18 @@ const deleteRoomID = async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
+const UpdateStatusRoom = async(req,res)=>{
+    await rooms.findByIdAndUpdate({_id:req.body.id},{is_active_status:true})
+
+    return res.status(200).json({message:'Update Status Room Success'})
+}
 export const r = {
 
     viewRoom,
     viewRoomID,
     createRoom,
     updateRoomID,
-    deleteRoomID
+    deleteRoomID,
+    UpdateStatusRoom
 };

@@ -1,18 +1,31 @@
-import express from "express"
-import { profile,UploadPic } from "../controller/profile.js";
+import express from "express";
+import { profile } from "../controller/profile.js";
+import { UploadPic } from "../middleware/multer.js";
 import { Validation } from "../validation/jwtValidate.js";
-const profileRouter = express.Router()
+import uploadMiddleware from "../middleware/multer.js";
 
-profileRouter.post("/api/profile/create",Validation.jwtValidate,UploadPic.single('images'),profile.CreateProfile,)
+const profileRouter = express.Router();
 
-profileRouter.get("/api/profile/reads",Validation.jwtValidate,profile.ReadManyProfile)
+profileRouter.post("/api/profile/create",
+    Validation.jwtValidate,
+    UploadPic.single('image'),
+    uploadMiddleware,
+    profile.CreateProfile
+);
 
-profileRouter.get("/api/profile/read",Validation.jwtValidate,profile.ReadProfile)
+profileRouter.get("/api/profile/reads", Validation.jwtValidate, profile.ReadManyProfile);
 
-profileRouter.put("/api/profile/update/",Validation.jwtValidate,UploadPic.single('images'),profile.UpdateProfile,)
+profileRouter.get("/api/profile/read", Validation.jwtValidate, profile.ReadProfile);
 
-profileRouter.delete("/api/profile/delete/:id",Validation.jwtValidate,profile.DeleteProfile)
+profileRouter.put("/api/profile/update",
+    Validation.jwtValidate,
+    UploadPic.single('image'),
+    uploadMiddleware,
+    profile.UpdateProfile
+);
 
-profileRouter.get("/api/profile/picture/:file",profile.ViewPicture,)
+profileRouter.delete("/api/profile/delete/", Validation.jwtValidate, profile.DeleteProfile);
 
-export default profileRouter
+profileRouter.get("/api/profile/picture/:imageId", profile.viewPic);
+
+export default profileRouter;

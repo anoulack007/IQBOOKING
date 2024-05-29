@@ -8,6 +8,11 @@ import authFacebook from './src/routes/Auth/AuthFacebook.js';
 import profileRouter from './src/routes/profile.js';
 import authTernAndCondition from './src/routes/termAndCondition.js';
 import authPolicy from './src/routes/policy.js';
+import dotenv from 'dotenv';
+dotenv.config();
+import cloudinary from './src/config/cloudinary.js';
+
+
 
 import cors from 'cors';
 
@@ -36,6 +41,7 @@ app.use(bookingRoute);
 app.use(roomRoute);
 app.use(favRoute);
 app.use(notificationTokenRoute);
+// app.use(could)
 
 
 const port = configEnv.PORT
