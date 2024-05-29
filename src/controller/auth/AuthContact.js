@@ -104,7 +104,7 @@ const UpdateContact = async (req, res) => {
 
   const UpdateContact = await customerSchema.findByIdAndUpdate(
     { _id: id },
-    { contact, profileId: profileId },
+    { ...req.body},
     { new: true }
   );
 

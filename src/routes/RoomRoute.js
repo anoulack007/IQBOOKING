@@ -13,7 +13,7 @@ roomRoute.get("/api/room/picture/:file",profile.ViewPicture)
 roomRoute.post("/api/create/room",Validation.jwtValidate,UploadPic.array('images'),uploadMiddleware, r.createRoom);
 roomRoute.put("/api/update/room/:id",Validation.jwtValidate,UploadPic.array('images'),uploadMiddleware, r.updateRoomID);
 roomRoute.delete("/api/delete/room/:id",Validation.jwtValidate, r.deleteRoomID);
-roomRoute.patch("/api/updatestatus/room/",Validation.jwtValidate,r.UpdateStatusRoom)
+roomRoute.patch("/api/updatestatus/room/:id",Validation.jwtValidate,r.UpdateStatusRoom)
 
 
 export default roomRoute;

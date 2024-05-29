@@ -5,7 +5,7 @@ import { rooms } from "../../model/rooms.js";
 const viewRoom = async (req, res) => {
     const info = await rooms.find()
     console.log(info);
-    
+
 
     return res.status(200).send(info)
 };
@@ -37,54 +37,53 @@ const viewRoomID = async (req, res) => {
 //Create room
 const createRoom = async (req, res) => {
 
+    let images = []
 
-        let imageName = []
+    const { roomName, floor, type_room, description, is_active_status } = req.body
 
-        const { roomName, floor, type_room, description, is_active_status } = req.body
-
-        if (req.files) {
-            console.log(req.files)
-            for (const i of req.files) { imageName.push(i.originalname) }
-                console.log(imageName)
-            await rooms.create({
-                images: imageName,
-                roomName,
-                floor,
-                type_room,
-                description
-            });
-
-            return res.status(200).json({ message: "Room registered" });
+    if (req.uploadedFiles) {
+        for (const image of req.uploadedFiles) {
+            images.push(image.url)
         }
+        const dataRoom = await rooms.create({
+            images: images,
+            roomName,
+            floor,
+            type_room,
+            description
+        });
 
-        const roomCheck = await rooms.findOne({ roomName: roomName });
+        return res.send(dataRoom).status(200);
+    }
 
-        if (roomCheck) {
-            return res.status(400).json({
-                message: "Room is exist"
-            });
-        }
+    const roomCheck = await rooms.findOne({ roomName: roomName });
 
-        if (!roomName) {
+    if (roomCheck) {
+        return res.status(400).json({
+            message: "Room is exist"
+        });
+    }
 
-            return res.status(400).json({
-                message: "Please fill required information"
-            });
-        } else {
+    if (!roomName) {
 
-            await rooms.create({
+        return res.status(400).json({
+            message: "Please fill required information"
+        });
+    } else {
 
-                roomName,
-                floor,
-                type_room,
-                is_active_status,
-                description
-            });
-            return res.status(200).json({ message: "Room registered" });
-        }
+        const dataRoom = await rooms.create({
 
-    
-}
+            roomName,
+            floor,
+            type_room,
+            is_active_status,
+            description
+        });
+        return res.send(dataRoom).status(200);
+    }
+
+    }
+
 
 //Update room information by ID
 const updateRoomID = async (req, res) => {
@@ -92,7 +91,7 @@ const updateRoomID = async (req, res) => {
     try {
 
         const roomID = req.params.id;
-        const { roomName, floor, type_room, description,is_active_status } = req.body
+        const { roomName, floor, type_room, description, is_active_status } = req.body
 
         const roomCheck = await rooms.findOne({ roomName: roomName });
 
@@ -102,30 +101,32 @@ const updateRoomID = async (req, res) => {
             });
         }
 
-        if (req.files) {
+        if (req.uploadedFiles) {
 
-            let imageName = []
+            let images = []
 
-            for (const i of req.files) { imageName.push(i.originalname) }
-            
+            for (const image of req.uploadedFiles) {
+                images.push(image.url)
+            }
 
-
-            await rooms.findByIdAndUpdate({
+            const data = await rooms.findByIdAndUpdate({
                 _id: roomID
             },
                 {
-                    images: imageName,
+                    images: images,
                     roomName,
                     floor,
                     type_room,
                     description,
                     is_active_status
+                },{
+                    new:true
                 });
-                
-                return res.status(200).json({message: "Success!"})
+
+            return res.send(data).status(200)
         } else {
 
-            await rooms.findByIdAndUpdate({
+            const data = await rooms.findByIdAndUpdate({
                 _id: roomID
             },
                 {
@@ -134,9 +135,8 @@ const updateRoomID = async (req, res) => {
                     type_room,
                     description,
                     is_active_status
-                });
-            return res.status(200).json({ message: "Success!" })
-
+                },{new:true});
+            return res.send(data).status(200)
         }
 
     } catch (err) {
@@ -166,10 +166,10 @@ const deleteRoomID = async (req, res) => {
     }
 }
 
-const UpdateStatusRoom = async(req,res)=>{
-    await rooms.findByIdAndUpdate({_id:req.body.id},{is_active_status:true})
+const UpdateStatusRoom = async (req, res) => {
+    await rooms.findByIdAndUpdate({ _id: req.body.id }, { is_active_status: true })
 
-    return res.status(200).json({message:'Update Status Room Success'})
+    return res.status(200).json({ message: 'Update Status Room Success' })
 }
 export const r = {
 

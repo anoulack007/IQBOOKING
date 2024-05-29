@@ -17,26 +17,39 @@ const storage = new CloudinaryStorage({
 
 export const UploadPic = multer({ storage });
 
-const uploadMiddleware = (req, res, next) => {
-  if (!req.file) {
+const uploadMiddleware = async (req, res, next) => {
+  let uploadedFiles = []
+
+  if (!req.file && (!req.files || req.files.length === 0)) {
     return res.status(400).json({
       success: false,
       message: "No file uploaded",
     });
   }
 
-  cloudinary.uploader.upload(req.file.path, (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        success: false,
-        message: "Error uploading to Cloudinary",
-      });
+
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    uploadedFiles.push(result);
+  } else if (req.files) {
+    for (const file of req.files) {
+      // console.log(file);
+      const result = await cloudinary.uploader.upload(file.path);
+
+      uploadedFiles.push(result);
     }
-  
-    req.uploadedFile = result; // Save the upload result in request object
-    next();
-  });
+  }
+
+  req.uploadedFiles = uploadedFiles; // Save the upload results in the request object
+  next();
+
+
+
+
+
 };
 
 export default uploadMiddleware;
+
+
+
