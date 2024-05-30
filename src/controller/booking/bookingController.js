@@ -80,7 +80,7 @@ const createBooking = async (req, res) => {
         //     console.error(err);
         //     return res.status(500).json({ message: 'Internal Server Error' });
         // }
-    }else{
+    } else {
         return res.send(Validate_status).status(400)
     }
 };
@@ -117,21 +117,24 @@ const updateBookingID = async (req, res) => {
 //NOTE Delete booking information by ID
 const deleteBookingID = async (req, res) => {
 
-    try {
+    // try {
 
-        const bookingID = req.params.id
-        const deleteB = await bookings.findByIdAndDelete(bookingID)
+    const bookingID = req.params.id
 
-        if (!deleteB) {
-            return res.status(404).json({ message: `Booking with ID ${bookingID} is invalid or not found` });
-        }
-
-        return res.status(200).json({ message: `Booking with ID ${bookingID} deleted successfully` })
-    } catch (err) {
-
-        console.error(err);
-        return res.status(500).json({ message: 'Internal Server Error' });
+    const deleteB = await bookings.findByIdAndDelete(bookingID)
+    if (!deleteB) {
+        return res.status(404).json({ message: `Booking with ID ${bookingID} is invalid or not found` });
     }
+
+    await rooms.findByIdAndUpdate({ _id: deleteB.roomID }, { is_active_status: true }, { new: true })
+
+
+    return res.status(200).json({ message: `Booking with ID ${bookingID} deleted successfully` })
+    // } catch (err) {
+
+    //     console.error(err);
+    //     return res.status(500).json({ message: 'Internal Server Error' });
+    // }
 }
 
 const ValidationRoom = async (roomID) => {

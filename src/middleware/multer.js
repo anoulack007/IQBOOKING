@@ -11,7 +11,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     // folder: 'profile_pictures',
-    public_id: (req, file) => file.originalname.split('.')[0],
+    public_id: (req, file) => file.originalname,
   },
 });
 
@@ -31,20 +31,18 @@ const uploadMiddleware = async (req, res, next) => {
   if (req.file) {
     const result = await cloudinary.uploader.upload(req.file.path);
     uploadedFiles.push(result);
+    
   } else if (req.files) {
     for (const file of req.files) {
       // console.log(file);
       const result = await cloudinary.uploader.upload(file.path);
-
+      console.log(result);
       uploadedFiles.push(result);
     }
   }
 
   req.uploadedFiles = uploadedFiles; // Save the upload results in the request object
   next();
-
-
-
 
 
 };

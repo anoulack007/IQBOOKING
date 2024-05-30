@@ -34,7 +34,7 @@ const viewRoomID = async (req, res) => {
     }
 }
 
-//Create room
+//NOTE Create room
 const createRoom = async (req, res) => {
 
     let images = []
@@ -145,7 +145,7 @@ const updateRoomID = async (req, res) => {
 //Delete room information by ID
 const deleteRoomID = async (req, res) => {
 
-    try {
+    // try {
 
         const roomID = req.params.id
         const deleteR = await rooms.findByIdAndDelete(roomID)
@@ -154,12 +154,11 @@ const deleteRoomID = async (req, res) => {
             return res.status(404).json({ message: `Room with ID ${roomID} is invalid or not found` });
         }
 
-        return res.status(200).json({ message: `Room with ID ${roomID} is removed` })
-    } catch (err) {
+        return res.send(deleteR).status(200)
 
-        console.error(err);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
+    //     console.error(err);
+    //     return res.status(500).json({ message: 'Internal Server Error' });
+    // }
 }
 
 const UpdateStatusRoom = async (req, res) => {
