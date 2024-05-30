@@ -9,7 +9,7 @@ const roomRoute = express.Router()
 //Room Route
 roomRoute.get("/api/room",Validation.jwtValidate,r.viewRoom);
 roomRoute.get("/api/room/:id",Validation.jwtValidate, r.viewRoomID);
-roomRoute.get("/api/room/picture/:file",profile.ViewPicture)
+roomRoute.get("/api/room/picture/:file",profile.viewPic)
 roomRoute.post("/api/create/room",Validation.jwtValidate,UploadPic.array('images'),uploadMiddleware, r.createRoom);
 roomRoute.put("/api/update/room/:id",Validation.jwtValidate,UploadPic.array('images'),uploadMiddleware, r.updateRoomID);
 roomRoute.delete("/api/delete/room/:id",Validation.jwtValidate, r.deleteRoomID);
