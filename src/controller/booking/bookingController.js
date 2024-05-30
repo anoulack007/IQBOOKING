@@ -52,37 +52,37 @@ const createBooking = async (req, res) => {
 
     const { _id } = req.user
 
-    const customerID = await customerSchema.findById({
-        _id: _id
-    })
 
     const { roomID, roomName, meetingDate, meetingTime, startTime, endTime } = req.body
 
-    await ValidationRoom(roomID,res);
+    const Validate_status = await ValidationRoom(roomID, res);
 
-    if (!customerID || !roomID || !roomName || !meetingDate || !startTime || !endTime) {
-
-            return res.status(400).json({message: "Please fill required information"});
-        }else if({...req.body}){
+    if (Validate_status == true) {
+        if (!roomID || !roomName || !meetingDate || !startTime || !endTime) {
+            return res.status(400).send("Please fill required information");
+        } else if ({ ...req.body }) {
 
             const info = await bookings.create({
 
-                customerID:customerID,
+                customerID: _id,
                 roomID,
                 roomName,
-                meetingDate ,
+                meetingDate,
                 meetingTime,
                 startTime,
                 endTime,
 
             });
-            return res.status(200).send(info);
-    }
-    // } catch (err) {
+            return res.send(info).status(200)
+        }
+        // } catch (err) {
 
-    //     console.error(err);
-    //     return res.status(500).json({ message: 'Internal Server Error' });
-    // }
+        //     console.error(err);
+        //     return res.status(500).json({ message: 'Internal Server Error' });
+        // }
+    }else{
+        return res.send(Validate_status).status(400)
+    }
 };
 
 //Update booking information by ID
@@ -134,14 +134,15 @@ const deleteBookingID = async (req, res) => {
     }
 }
 
-const ValidationRoom = async (roomID,res) => {
-    console.log(roomID);
+const ValidationRoom = async (roomID) => {
+
     const FindRoom = await rooms.findById({ _id: roomID })
     if (FindRoom.is_active_status === false) {
         console.log(FindRoom.is_active_status)
-        return res.status(400).json({ message: 'Already reserved' });
+        return 'Already reserved';
     }
-    await rooms.findByIdAndUpdate({ _id: roomID }, { is_active_status: false })
+    await rooms.findByIdAndUpdate({ _id: roomID }, { is_active_status: false }, { new: true })
+    return true
 }
 
 

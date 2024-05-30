@@ -59,16 +59,12 @@ const createRoom = async (req, res) => {
     const roomCheck = await rooms.findOne({ roomName: roomName });
 
     if (roomCheck) {
-        return res.status(400).json({
-            message: "Room is exist"
-        });
+        return res.status(400).send("Room is exist")
     }
 
     if (!roomName) {
 
-        return res.status(400).json({
-            message: "Please fill required information"
-        });
+        return res.status(400).send("Please fill required information")
     } else {
 
         const dataRoom = await rooms.create({
