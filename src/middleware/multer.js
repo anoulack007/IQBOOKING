@@ -17,37 +17,41 @@ const storage = new CloudinaryStorage({
 
 export const UploadPic = multer({ storage });
 
-const uploadMiddleware = async (req, res, next) => {
-  let uploadedFiles = []
+// const uploadMiddleware = async (req, res, next) => {
+//   let uploadedFiles = []
 
-  if (!req.file && (!req.files || req.files.length === 0)) {
-    return res.status(400).json({
-      success: false,
-      message: "No file uploaded",
-    });
-  }
+//   // if (!req.file && (!req.files || req.files.length === 0)) {
+//   //   return res.status(400).json({
+//   //     success: false,
+//   //     message: "No file uploaded",
+//   //   });
+//   // }
+//   console.log(req.file);
 
 
-  if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path);
-    uploadedFiles.push(result);
+//   if (req.file) {
+//     const result = await cloudinary.uploader.upload(req.file.path);
+//     uploadedFiles.push(result);
     
-  } else if (req.files) {
-    for (const file of req.files) {
-      // console.log(file);
-      const result = await cloudinary.uploader.upload(file.path);
-      console.log(result);
-      uploadedFiles.push(result);
-    }
-  }
+//   }
+//   if (req.files) {
 
-  req.uploadedFiles = uploadedFiles; // Save the upload results in the request object
-  next();
+//     for (const file of req.files) {
+//       // console.log(file);
+//       const result = await cloudinary.uploader.upload(file.path);
+//       // console.log(result);
+//       uploadedFiles.push(result);
+//     }
+//   }
+
+//   req.uploadedFiles = uploadedFiles; // Save the upload results in the request object
+//   next();
+//   console.log(req.uploadedFiles);
 
 
-};
+// };
 
-export default uploadMiddleware;
+// export default uploadMiddleware;
 
 
 

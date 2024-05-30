@@ -2,14 +2,14 @@ import express from "express";
 import { profile } from "../controller/profile.js";
 import { UploadPic } from "../middleware/multer.js";
 import { Validation } from "../validation/jwtValidate.js";
-import uploadMiddleware from "../middleware/multer.js";
+// import uploadMiddleware from "../middleware/multer.js";
 
 const profileRouter = express.Router();
 
 profileRouter.post("/api/profile/create",
     Validation.jwtValidate,
     UploadPic.single('image'),
-    uploadMiddleware,
+    // uploadMiddleware,
     profile.CreateProfile
 );
 
@@ -20,7 +20,7 @@ profileRouter.get("/api/profile/read", Validation.jwtValidate, profile.ReadProfi
 profileRouter.put("/api/profile/update",
     Validation.jwtValidate,
     UploadPic.single('image'),
-    uploadMiddleware,
+    // uploadMiddleware,
     profile.UpdateProfile
 );
 

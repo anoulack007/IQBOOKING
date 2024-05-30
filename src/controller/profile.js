@@ -2,12 +2,10 @@ import { profileSchema } from "../model/profile.js";
 import { v2 as cloudinary } from 'cloudinary';
 import { existsSync, unlinkSync } from "fs";
 import { fileURLToPath } from 'url';
-import { dirname,join } from 'path';
+import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-
 
 /**
  * 
@@ -35,7 +33,6 @@ const CreateProfile = async (req, res) => {
 
     return res.status(200).send(DataProfile1);
   } else if (req.file) {
-    let image = req.file.filename;
 
     const findGmail = await profileSchema.findOne({ gmail });
 
@@ -49,7 +46,7 @@ const CreateProfile = async (req, res) => {
       gender,
       phone,
       country,
-      image,
+      image:req.file.path,
     });
 
     return res.status(200).send(DataProfile2);
@@ -68,9 +65,9 @@ const ReadManyProfile = async (req, res) => {
  * @returns 
  */
 const ReadProfile = async (req, res) => {
-  const { profileId} = req.user
+  const { profileId } = req.user
 
-  if(!profileId) return  res.status(404).send('Profile Not found');
+  if (!profileId) return res.status(404).send('Profile Not found');
 
   const profile = await profileSchema.findById({ _id: profileId });
 
@@ -80,11 +77,13 @@ const ReadProfile = async (req, res) => {
 
   res.status(200).send(profile);
 };
-
+//NOTE - Update Profile
 const UpdateProfile = async (req, res) => {
   const { profileId } = req.user;
   const { name, gmail, gender, phone, country } = req.body;
 
+    // let avatar = req.uploadedFiles[0].url
+    // console.log(avatar);
   if (!req.file) {
     const UpProfile = await profileSchema.findByIdAndUpdate(
       { _id: profileId },
@@ -94,9 +93,10 @@ const UpdateProfile = async (req, res) => {
 
     return res.status(200).send(UpProfile);
   } else if (req.file) {
+
+    // let avatar = req.uploadedFiles[0].url
+
     const searchPic = await profileSchema.findById({ _id: profileId });
-    
-    let image = req.file.path;
 
     if (existsSync("./src/Picture/" + searchPic.image)) {
       unlinkSync("./src/Picture/" + searchPic.image, (err) => {
@@ -110,7 +110,7 @@ const UpdateProfile = async (req, res) => {
 
     const UpProfile = await profileSchema.findByIdAndUpdate(
       { _id: profileId },
-      { name, gmail, gender, phone, country, image },
+      { name, gmail, gender, phone, country, image:req.file.path },
       { new: true }
     );
 
@@ -119,7 +119,7 @@ const UpdateProfile = async (req, res) => {
 };
 
 const DeleteProfile = async (req, res) => {
-  const { profileId} = req.user
+  const { profileId } = req.user
 
 
   const deletePro = await profileSchema.findByIdAndDelete({ _id: profileId });
@@ -141,12 +141,12 @@ const DeleteProfile = async (req, res) => {
   }
 };
 
-const viewPic = async(req,res)=>{
+const viewPic = async (req, res) => {
   try {
     // Retrieve the image URL from Cloudinary based on the image ID
     const imageUrl = cloudinary.url(req.params.imageId);
     console.log(imageUrl);
-    
+
     // Send the image URL in the response
     res.status(200).json({ imageUrl: imageUrl });
   } catch (error) {
@@ -155,7 +155,7 @@ const viewPic = async(req,res)=>{
   }
 }
 
-const ViewPicture = async (req,res)=>{
+const ViewPicture = async (req, res) => {
   const pic = req.params.file
   console.log(pic)
   // res.sendFile(join(__dirname,"../Picture/", pic))
