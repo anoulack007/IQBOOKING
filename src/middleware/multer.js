@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { stringify } from "querystring";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,41 +18,35 @@ const storage = new CloudinaryStorage({
 
 export const UploadPic = multer({ storage });
 
-// const uploadMiddleware = async (req, res, next) => {
-//   let uploadedFiles = []
+export const uploadMiddlewareSingle = async (req, res, next) => {
 
-//   // if (!req.file && (!req.files || req.files.length === 0)) {
-//   //   return res.status(400).json({
-//   //     success: false,
-//   //     message: "No file uploaded",
-//   //   });
-//   // }
-//   console.log(req.file);
+  if (req.file != undefined) {
 
+    const avatar = req.file?.path
+    // console.log(avatar);    
+    const result = await cloudinary.uploader.upload(avatar);
 
-//   if (req.file) {
-//     const result = await cloudinary.uploader.upload(req.file.path);
-//     uploadedFiles.push(result);
-    
-//   }
-//   if (req.files) {
+    req.pictureSingle = result; // Save the upload results in the request object
+    next();
+  } else {
+    next();
+  }
 
-//     for (const file of req.files) {
-//       // console.log(file);
-//       const result = await cloudinary.uploader.upload(file.path);
-//       // console.log(result);
-//       uploadedFiles.push(result);
-//     }
-//   }
-
-//   req.uploadedFiles = uploadedFiles; // Save the upload results in the request object
-//   next();
-//   console.log(req.uploadedFiles);
+};
 
 
-// };
-
-// export default uploadMiddleware;
-
-
-
+export const uploadMiddlewareArray = async (req, res,next) => {
+  let pictureArray = []
+  
+  if (req.files.length !== 0) {
+    // console.log(req.files);
+    for (const file of req.files) {
+      const result = await cloudinary.uploader.upload(file.path);
+      pictureArray.push(result);
+    }
+    req.uploadedFiles = pictureArray;
+    next();
+    }else{
+    next();
+}
+}

@@ -16,7 +16,7 @@ const __dirname = dirname(__filename);
 const CreateProfile = async (req, res) => {
   const { name, gmail, gender, phone, country } = req.body;
 
-  if (!req.file) {
+  if (req.pictureSingle == undefined) {
     const findGmail = await profileSchema.findOne({ gmail });
 
     if (findGmail) {
@@ -32,7 +32,9 @@ const CreateProfile = async (req, res) => {
     });
 
     return res.status(200).send(DataProfile1);
-  } else if (req.file) {
+  } else if (req.pictureSingle != undefined) {
+
+    const avatar = req.pictureSingle.url
 
     const findGmail = await profileSchema.findOne({ gmail });
 
@@ -46,7 +48,7 @@ const CreateProfile = async (req, res) => {
       gender,
       phone,
       country,
-      image:req.file.path,
+      image: avatar,
     });
 
     return res.status(200).send(DataProfile2);
@@ -82,9 +84,8 @@ const UpdateProfile = async (req, res) => {
   const { profileId } = req.user;
   const { name, gmail, gender, phone, country } = req.body;
 
-    // let avatar = req.uploadedFiles[0].url
-    // console.log(avatar);
-  if (!req.file) {
+  // const avatar = req.pictureSingle?.url
+  if (req.pictureSingle == undefined) {
     const UpProfile = await profileSchema.findByIdAndUpdate(
       { _id: profileId },
       { name, gmail, gender, phone, country },
@@ -92,9 +93,9 @@ const UpdateProfile = async (req, res) => {
     );
 
     return res.status(200).send(UpProfile);
-  } else if (req.file) {
+  } else if (req.pictureSingle != undefined) {
 
-    // let avatar = req.uploadedFiles[0].url
+    const avatar = req.pictureSingle.url
 
     const searchPic = await profileSchema.findById({ _id: profileId });
 
@@ -110,7 +111,7 @@ const UpdateProfile = async (req, res) => {
 
     const UpProfile = await profileSchema.findByIdAndUpdate(
       { _id: profileId },
-      { name, gmail, gender, phone, country, image:req.file.path },
+      { name, gmail, gender, phone, country, image: avatar },
       { new: true }
     );
 

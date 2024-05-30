@@ -39,13 +39,15 @@ const createRoom = async (req, res) => {
 
     let images = []
     
-
+    // console.log(req.uploadedFiles);
     const { roomName, floor, type_room, description, is_active_status } = req.body
 
-    if (req.files) {
-        for (const image of req.files) {
-            images.push(image.path)
+    if (req.uploadedFiles.length !==0) {
+        // console.log(req.uploadedFiles);
+        for (const image of req.uploadedFiles) {
+            images.push(image.url)
         }
+
         const dataRoom = await rooms.create({
             images: images,
             roomName,
@@ -58,7 +60,7 @@ const createRoom = async (req, res) => {
     }
 
     const roomCheck = await rooms.findOne({ roomName: roomName });
-
+    console.log(roomCheck);
     if (roomCheck) {
         return res.status(400).send("Room is exist")
     }
@@ -96,14 +98,13 @@ const updateRoomID = async (req, res) => {
             });
         }
 
-        if (req.files) {
+        if (req.uploadedFiles.length !==0) {
 
             let images = []
 
-            for (const image of req.files) {
-                images.push(image.path)
+            for (const image of req.uploadedFiles) {
+                images.push(image.url)
             }
-
             const data = await rooms.findByIdAndUpdate({
                 _id: roomID
             },
