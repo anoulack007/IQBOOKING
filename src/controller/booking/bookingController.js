@@ -49,6 +49,8 @@ const viewBookingID = async (req, res) => {
 const createBooking = async (req, res) => {
 
     // try {
+    // console.log(req);
+    
 
     const { _id } = req.user
 
@@ -73,7 +75,10 @@ const createBooking = async (req, res) => {
                 endTime,
 
             });
-            return res.send(info).status(200)
+
+            const data = await bookings.findById(info._id).populate('customerID').populate('roomID')
+            
+            return res.send(data).status(200)
         }
         // } catch (err) {
 
